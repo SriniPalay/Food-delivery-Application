@@ -1,4 +1,11 @@
-import org.swiggy.models.*;
+package org.swiggy.models;
+
+
+import org.swiggy.models.enums.FoodCategory;
+import org.swiggy.models.enums.FoodType;
+import org.swiggy.models.enums.PaymentType;
+
+import java.math.BigDecimal;
 
 public class Main {
 
@@ -22,34 +29,33 @@ public class Main {
 
         FoodItem biryani =
                 new FoodItem(
-                        "1",
-                        "Chicken Biryani",
-                        299,
-                        false
+                        1,
+                        "Mushroom Biryani",
+                        new BigDecimal(400.0),
+                        FoodType.VEG,
+                        FoodCategory.MAIN_COURSE
                 );
 
-        paradise.addFoodItem(biryani);
 
         Customer customer =
                 new Customer(
                         "101",
                         "Rukmini",
-                        "rukmini@gmail.com",
                         "9876543210"
                 );
 
         customer.addAddress(address);
 
-        Order order =
-                new Order(
-                        "1001",
-                        customer,
-                        paradise,
-                        PaymentType.UPI
-                );
+//        Order order =
+//                new Order(
+//                        "1001",
+//                        customer,
+//                        paradise,
+//                        PaymentType.UPI
+//                );
+//
+//        order.addFoodItem(biryani);
 
-        order.addFoodItem(biryani);
-
-        System.out.println(order.calculateTotal());
+        //System.out.println(order.calculateTotal());
     }
 }

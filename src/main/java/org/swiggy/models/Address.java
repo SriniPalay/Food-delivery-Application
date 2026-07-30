@@ -10,7 +10,7 @@ public class Address {
     private final String houseNumber;
 
     // Parameterized Constructor
-    public Address(String houseNumber,String street, String city, String state, String zipCode, double latitude, double longitude) {
+    public Address(String houseNumber,String street, String city, String state, String zipCode) {
         this.houseNumber = houseNumber;
         this.street = street;
         this.city = city;

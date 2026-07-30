@@ -1,4 +1,4 @@
-package org.swiggy.models;
+package org.swiggy.models.enums;
 
 public enum OrderStatus {
     PLACED,

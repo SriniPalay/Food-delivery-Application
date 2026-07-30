@@ -8,7 +8,7 @@ public class Menu {
 
     private final List<FoodItem> menuItems;// 1 Menu -> Many Food Items
 
-    public Menu(String menuId) {
+    public Menu() {
         // Prepping the empty container!
         this.menuItems = new ArrayList<>();
     }
