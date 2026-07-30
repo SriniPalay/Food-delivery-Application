@@ -1,4 +1,4 @@
-# Day 3 - Backend Engineering Notes
+# Sprint 3 - Backend Engineering Notes
 ## Topic: Domain Modeling, Collections Thinking & Object Responsibilities
 
 ---
