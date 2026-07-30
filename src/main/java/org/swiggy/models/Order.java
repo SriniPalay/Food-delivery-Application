@@ -1,5 +1,9 @@
 package org.swiggy.models;
 
+import org.swiggy.models.enums.OrderStatus;
+import org.swiggy.models.enums.PaymentType;
+
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,9 +17,9 @@ public class Order {
     private LocalDateTime orderTime;
 
     // Transition and dynamic parts
-    private double amount;
+    private BigDecimal amount;
     private PaymentType paymentType;
-    private OrderStatus  orderStatus;
+    private OrderStatus orderStatus;
 
     public Order(String orderId,
                  Customer customer,
@@ -33,15 +37,30 @@ public class Order {
     public void addFoodItem(FoodItem item) {
         orderItems.add(item);
     }
-    public double calculateTotal() {
+//    public double calculateTotal() {
+//
+//        double total = 0;
+//
+//        for (FoodItem item : orderItems) {
+//            total += item.getPrice();
+//        }
+//
+//        return total;
+//    }
 
-        double total = 0;
-
-        for (FoodItem item : orderItems) {
-            total += item.getPrice();
+    public void accept(){
+        orderStatus = OrderStatus.ACCEPTED_BY_RESTAURANT;
+    }
+    public void prepare(){
+        if (orderStatus == OrderStatus.CANCELLED){
+            throw new IllegalStateException("Cancelled order cannot be prepared");
         }
-
-        return total;
+    }
+    public void dispatch(){
+        orderStatus = OrderStatus.READY_FOR_PICKUP;
+    }
+    public void deliver(){
+        orderStatus = OrderStatus.DELIVERED;
     }
 
     public void cancel() {

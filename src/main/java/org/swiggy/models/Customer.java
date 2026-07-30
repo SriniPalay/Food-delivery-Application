@@ -28,6 +28,8 @@ public class Customer {
     public void removeAddress(Address address){
         savedAddresses.remove(address);
     }
+
+    public void updatePrimaryAddress(){}
     public List<Address> getAllAddress(){
         return Collections.unmodifiableList(savedAddresses);
     }
