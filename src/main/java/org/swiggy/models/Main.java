@@ -1,11 +1,11 @@
 package org.swiggy.models;
 
 
-import org.swiggy.models.enums.FoodCategory;
-import org.swiggy.models.enums.FoodType;
-import org.swiggy.models.enums.PaymentType;
+import org.swiggy.enums.FoodCategory;
+import org.swiggy.enums.FoodType;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 public class Main {
 
@@ -45,6 +45,11 @@ public class Main {
                 );
 
         customer.addAddress(address);
+
+        Menu menu = new Menu();
+        menu.addFoodItem(biryani);
+        List<FoodItem> VegItems = menu.getVegFoodItems();
+        System.out.println(VegItems);
 
 //        Order order =
 //                new Order(

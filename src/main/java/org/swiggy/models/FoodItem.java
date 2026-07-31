@@ -1,7 +1,7 @@
 package org.swiggy.models;
 
-import org.swiggy.models.enums.FoodCategory;
-import org.swiggy.models.enums.FoodType;
+import org.swiggy.enums.FoodCategory;
+import org.swiggy.enums.FoodType;
 
 import java.math.BigDecimal;
 import java.util.Objects;
@@ -131,6 +131,10 @@ public class FoodItem {
 
     public boolean isAvailable() {
         return available;
+    }
+    @Override
+    public String toString(){
+        return this.name;
     }
 
 
