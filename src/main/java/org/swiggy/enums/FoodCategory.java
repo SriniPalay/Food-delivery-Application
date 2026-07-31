@@ -1,4 +1,4 @@
-package org.swiggy.models.enums;
+package org.swiggy.enums;
 
 public enum FoodCategory {
         STARTER,
