@@ -11,6 +11,7 @@ public class Customer {
     private String email;
     private final List<Address> savedAddresses; // 1 Customer -> Many Addresses
     private List<Order> orderHistory;     // 1 Customer -> Many Orders
+    private Address defaultAddress;
 
     public Customer(String customerId, String name, String phoneNumber) {
         this.customerId = customerId;
@@ -40,5 +41,4 @@ public class Customer {
     public void changePhone(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
-
 }
