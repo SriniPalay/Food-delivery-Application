@@ -13,11 +13,12 @@ public class Main {
 
         Address address =
                 new Address(
-                        "12A",
+                        "Hno-102",
                         "MG Road",
+                        "Kukatpally",
                         "Hyderabad",
                         "Telangana",
-                        "500001"
+                        "500072"
                 );
 
         Restaurant paradise =
@@ -45,6 +46,7 @@ public class Main {
                 );
 
         customer.addAddress(address);
+        System.out.println(customer.getAllAddress());
 
         Menu menu = new Menu();
         menu.addFoodItem(biryani);
