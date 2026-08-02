@@ -3,8 +3,14 @@ package org.swiggy.models;
 import org.swiggy.enums.AddressType;
 
 import java.util.Objects;
+/**
+ * Represents an immutable delivery address.
+ *
+ * Address is a Value Object.
+ * Equality is determined by all of its values.
+ */
 
-public class Address {
+public final class Address {
     private final String houseNumber;
     private final String street;
     private final String area;
