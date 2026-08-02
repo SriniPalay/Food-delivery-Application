@@ -40,9 +40,10 @@ public class Main {
 
         Customer customer =
                 new Customer(
-                        "101",
+                        101,
                         "Rukmini",
-                        "9876543210"
+                        "9876543210",
+                        "srinivasan@gmail.com"
                 );
 
         customer.addAddress(address);
