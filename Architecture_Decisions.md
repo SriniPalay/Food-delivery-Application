@@ -224,3 +224,100 @@ Reason
 Customer is an Entity.
 
 Address equality remains value-based.
+
+## ADR-019
+
+Decision
+
+Restaurant creates its own Menu.
+
+Reason
+
+Restaurant owns Menu.
+
+Ownership includes lifecycle management.
+
+---
+
+## ADR-020
+
+Decision
+
+Main.java never creates Menu.
+
+Reason
+
+Only Restaurant should create
+its owned objects.
+
+---
+
+## ADR-021
+
+Decision
+
+FoodItems are created independently
+before being added to Menu.
+
+Reason
+
+Creation and association
+are different business events.
+
+---
+
+## ADR-022
+
+Decision
+
+Main.java acts only as
+an application orchestrator.
+
+Reason
+
+Business rules remain inside
+domain objects.
+
+---
+
+## ADR-023
+
+Decision
+
+Collections remain private.
+
+Only behaviour is exposed.
+
+Examples
+
+Customer
+
+↓
+
+addAddress()
+
+Menu
+
+↓
+
+addFoodItem()
+
+instead of exposing
+modifiable collections.
+
+---
+
+## ADR-024
+
+Decision
+
+Customer.java Version 1.0 frozen.
+
+Reason
+
+Current design satisfies
+Sprint 1 requirements.
+
+Future modifications
+should be driven only
+by new business requirements.
