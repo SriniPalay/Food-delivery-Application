@@ -576,3 +576,281 @@ Customer
 because Address management is currently simple.
 
 Create abstractions only when the business complexity demands them.
+
+## Principle 44
+
+Don't encode business meaning
+into collection order.
+
+Bad
+
+addresses.get(0)
+
+means default address.
+
+Good
+
+Store business concepts explicitly.
+
+private Address defaultAddress;
+
+---
+
+## Principle 45
+
+Protect important state
+using multiple independent layers.
+
+Example
+
+private
+
+↓
+
+final reference
+
+↓
+
+unmodifiableList()
+
+↓
+
+Immutable Address
+
+Each layer protects the object
+from a different kind of misuse.
+
+---
+
+## Principle 46
+
+Entity equality should be based
+on stable identity,
+not mutable attributes.
+
+Examples
+
+Customer ID
+
+Restaurant ID
+
+Order ID
+
+Never compare mutable fields
+such as name or email.
+
+---
+
+## Principle 47
+
+Implement equals() and hashCode()
+so that Java Collections Framework
+can correctly work with your objects.
+
+Collections such as
+
+contains()
+
+remove()
+
+HashSet
+
+HashMap
+
+depend on them.
+
+---
+
+## Principle 48
+
+Consistency is more important
+than personal preference.
+
+Whether your team always uses
+
+this.field
+
+or omits
+
+this
+
+be consistent across the codebase.
+
+---
+
+## Principle 49
+
+toString() is for debugging,
+not for exposing business data.
+
+Avoid logging sensitive information
+such as email,
+phone number,
+or passwords.
+
+---
+
+## Principle 50
+
+If an object owns another object
+and that owned object has
+a sensible default state,
+
+let the owner create it.
+
+Examples
+
+Customer creates Address List.
+
+Restaurant creates Menu.
+
+---
+
+## Principle 51
+
+Never create an object
+that another object
+is already responsible for creating.
+
+Main.java should never create Menu
+if Restaurant already owns it.
+
+---
+
+## Principle 52
+
+The owner of an object
+should own its lifecycle.
+
+Creation
+
+Modification
+
+Deletion
+
+should normally be controlled
+by the owner.
+
+---
+
+## Principle 53
+
+Demo code should tell
+a business story,
+not merely execute methods.
+
+A reader should understand
+the business flow
+without reading comments.
+
+---
+
+## Principle 54
+
+A demo application should validate
+
+both
+
+successful scenarios
+
+and
+
+failure scenarios.
+
+Business rules are only trusted
+when both paths are tested.
+
+---
+
+## Principle 55
+
+Variable names should describe
+their business role,
+not merely their data type.
+
+Good
+
+restaurantAddress
+
+homeAddress
+
+officeAddress
+
+Bad
+
+address
+
+address1
+
+address2
+
+---
+
+## Principle 56
+
+Main.java should orchestrate
+the application,
+not contain business logic.
+
+Create
+
+↓
+
+Call
+
+↓
+
+Display
+
+Nothing more.
+
+---
+
+## Principle 57
+
+Separate object creation
+from object association.
+
+Example
+
+Create FoodItem
+
+↓
+
+Add FoodItem to Menu
+
+These are different business events.
+
+---
+
+## Principle 58
+
+Do not expose mutable
+data structures.
+
+Expose behaviour instead.
+
+Good
+
+menu.addFoodItem()
+
+customer.addAddress()
+
+Bad
+
+menu.getFoodItems().add(...)
+
+customer.getAddresses().add(...)
+
+---
+
+## Principle 59
+
+Expose behaviours,
+not implementation details.
+
+External objects should ask
+the owner to perform an operation.
+
+They should never manipulate
+internal collections directly.

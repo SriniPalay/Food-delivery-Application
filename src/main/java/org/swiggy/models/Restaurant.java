@@ -136,4 +136,10 @@ public class Restaurant {
     public boolean isOpen() {
         return open;
     }
+
+    //important
+    @Override
+    public String toString(){
+        return this.getName() + " " + this.getAddress();
+    }
 }

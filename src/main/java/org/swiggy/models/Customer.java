@@ -209,7 +209,7 @@ public class Customer {
 
         Customer other = (Customer) object;
 
-        return customerId == other.customerId;
+        return this.customerId == other.customerId;
     }
     @Override
     public int hashCode() {
