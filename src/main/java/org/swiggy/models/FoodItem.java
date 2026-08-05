@@ -17,7 +17,6 @@ public class FoodItem {
     private String description;
 
     // Price changes over time
-    private BigDecimal price;
 
     // Veg / Non Veg never changes
     private final FoodType foodType;
@@ -30,7 +29,6 @@ public class FoodItem {
 
     public FoodItem(int id,
                     String name,
-                    BigDecimal price,
                     FoodType foodType,
                     FoodCategory category) {
         if (id <= 0) {
@@ -41,11 +39,6 @@ public class FoodItem {
             throw new IllegalArgumentException("Food name cannot be empty.");
         }
 
-        Objects.requireNonNull(price, "Price cannot be null.");
-
-        if (price.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new IllegalArgumentException("Price should be greater than zero.");
-        }
 
         Objects.requireNonNull(foodType, "Food type cannot be null.");
 
@@ -53,7 +46,6 @@ public class FoodItem {
 
         this.id = id;
         this.name = name;
-        this.price = price;
         this.foodType = foodType;
         this.category = category;
 
@@ -78,16 +70,6 @@ public class FoodItem {
     /**
      * Update price
      */
-    public void updatePrice(BigDecimal newPrice) {
-
-        Objects.requireNonNull(newPrice, "Price cannot be null.");
-
-        if (newPrice.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new IllegalArgumentException("Price should be greater than zero.");
-        }
-
-        this.price = newPrice;
-    }
 
     /**
      * Mark unavailable
@@ -117,9 +99,6 @@ public class FoodItem {
         return description;
     }
 
-    public BigDecimal getPrice() {
-        return price;
-    }
 
     public FoodType getFoodType() {
         return foodType;

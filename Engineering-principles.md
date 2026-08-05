@@ -854,3 +854,347 @@ the owner to perform an operation.
 
 They should never manipulate
 internal collections directly.
+
+# Engineering Principles
+
+---
+
+## Principle #60 — Business Rules Should Drive Object Design
+
+Never create fields or classes because Java allows it.
+
+Create them because the business requires them.
+
+Bad:
+
+"I'll add a Restaurant field."
+
+Good:
+
+"The cart must enforce a one-restaurant rule, therefore it needs to know its restaurant."
+
+Business requirements should shape the object model.
+
+---
+
+## Principle #61 — Group Related Information into an Object
+
+When multiple pieces of information naturally belong together, model them as a separate object.
+
+Example:
+
+Instead of:
+
+- FoodItem
+- Quantity
+- Instructions
+- Subtotal
+
+stored separately,
+
+create:
+
+CartItem
+
+Objects represent concepts.
+
+Collections store objects.
+
+---
+
+## Principle #62 — Think from the Business, Not the Data Structure
+
+Choose List, Set, or Map based on the business model—not because a particular collection seems convenient.
+
+Bad:
+
+Map<FoodItem, Integer>
+
+Good:
+
+List<CartItem>
+
+If a Map starts accumulating metadata, it's often a sign that another class should exist.
+
+---
+
+## Principle #63 — Repeated Business Concepts Deserve Their Own Class
+
+Whenever a business concept repeats independently, it usually deserves its own class.
+
+Examples:
+
+Cart
+↓
+CartItem
+
+Order
+↓
+OrderItem
+
+Invoice
+↓
+InvoiceLine
+
+Playlist
+↓
+PlaylistSong
+
+---
+
+## Principle #64 — Hide Internal Implementation Details
+
+Public APIs should expose business operations.
+
+Avoid exposing implementation-specific objects.
+
+Good:
+
+cart.addFoodItem(foodItem);
+
+Avoid:
+
+cart.addCartItem(cartItem);
+
+The caller should think in terms of business actions, not internal implementation.
+
+---
+
+## Principle #65 — Object Lifecycle Determines Ownership
+
+Ask:
+
+"Can this object exist without its parent?"
+
+If YES
+
+Independent lifecycle.
+
+Created externally.
+
+Examples:
+
+- Address
+- FoodItem
+- Customer
+- Restaurant
+
+If NO
+
+Owned lifecycle.
+
+Created internally.
+
+Examples:
+
+- Menu
+- CartItem
+
+Ownership determines creation.
+
+---
+
+## Principle #66 — Repeated Business Concepts Deserve Their Own Class
+
+Whenever one object contains many repeated business entries, the repeated entry usually deserves its own class.
+
+Examples:
+
+- Cart → CartItem
+- Order → OrderItem
+- Invoice → InvoiceLine
+- Playlist → PlaylistSong
+
+Why?
+
+Because each repeated object eventually grows its own state and behavior.
+
+Instead of forcing multiple collections or maps, model the repeated business concept as an object.
+
+---
+
+## Principle #67 — Prefer Unidirectional Relationships
+
+Do not make two objects reference each other unless both genuinely need collaboration.
+
+Good:
+
+Customer
+↓
+Cart
+
+Restaurant
+↓
+Menu
+
+Bad:
+
+Customer ↔ Cart
+
+unless Cart actually needs Customer.
+
+Benefits:
+
+- Lower coupling
+- Easier reasoning
+- Fewer synchronization bugs
+
+---
+
+## Principle #68 — One Owner, One Creator
+
+Every owned object should have one obvious place where it is created.
+
+Examples:
+
+Restaurant creates Menu.
+
+Customer creates Cart.
+
+Cart creates CartItem.
+
+Ownership implies creation.
+
+---
+
+## Principle #69 — Store Business Concepts Explicitly
+
+If a field represents an important business concept, store it explicitly rather than deriving it from other data.
+
+Example:
+
+Store:
+
+private Restaurant restaurant;
+
+instead of
+
+cartItems.get(0).getRestaurant()
+
+Business concepts should be immediately visible.
+
+---
+
+## Principle #70 — Freeze Business Rules Before Designing
+
+Never design classes before agreeing on the business rules.
+
+Example:
+
+Business Rule:
+
+One Cart → One Restaurant
+
+Once this rule is fixed, the class design becomes obvious.
+
+Changing business rules changes architecture.
+
+---
+
+## Principle #71 — Store Facts, Derive Calculations
+
+Store facts.
+
+Derive calculations.
+
+Store:
+
+- Restaurant
+- Quantity
+- Status
+
+Derive:
+
+- Total Price
+- Tax
+- Discounts
+
+Calculated values should not be stored unless necessary for performance.
+
+---
+
+## Principle #72 — Don't Express Java Defaults
+
+Avoid writing code that only repeats Java's default behavior.
+
+Avoid:
+
+this.restaurant = null;
+
+this.quantity = 0;
+
+unless those assignments communicate business meaning.
+
+Less code means less maintenance.
+
+---
+
+## Principle #73 — Backend Validates, Frontend Communicates
+
+Backend responsibility:
+
+- Validate business rules
+- Reject invalid operations
+
+Frontend responsibility:
+
+- Interact with the user
+- Decide how to present errors or confirmations
+
+Example:
+
+Backend:
+
+throw new IllegalStateException(...)
+
+Frontend:
+
+"Replace Cart?"
+
+Never let the backend silently perform destructive actions.
+
+---
+
+## Principle #74 — Never Expose Mutable Collections
+
+Always expose read-only views of collections.
+
+Good:
+
+Collections.unmodifiableList(...)
+
+Avoid exposing internal collections directly.
+
+The owning object should remain responsible for maintaining its business invariants.
+
+---
+
+## Principle #75 — Refactor When the Domain Model Breaks
+
+If the domain model starts feeling unnatural,
+
+Stop.
+
+Fix the model before adding more features.
+
+Today's example:
+
+Instead of
+
+Restaurant
+↓
+Menu
+↓
+FoodItem
+
+we evolved to
+
+Restaurant
+↓
+Menu
+↓
+MenuItem
+↓
+FoodItem
+
+Good engineers improve the model rather than adding workarounds.

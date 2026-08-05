@@ -28,6 +28,7 @@ public class Customer {
     private final List<Address> savedAddresses;
 
     private Address defaultAddress;
+    private final Cart cart;
 
     public Customer(int customerId, String name, String phoneNumber, String email) {
         this.customerId = validateCustomerId(customerId);
@@ -35,6 +36,7 @@ public class Customer {
         this.email = validateEmail(email);
         this.phoneNumber = validatePhoneNumber(phoneNumber);
         this.savedAddresses = new ArrayList<>();
+        this.cart = new Cart();
     }
 
     public void removeAddress(Address address) {
