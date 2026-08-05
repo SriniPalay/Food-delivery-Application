@@ -1,6 +1,7 @@
 package org.swiggy.models;
 
 import org.swiggy.enums.FoodType;
+import org.swiggy.models.MenuItem;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -9,131 +10,88 @@ import java.util.Objects;
 
 public class Menu {
 
-    /**
-     * Menu owns its food items.
-     * The reference never changes,
-     * but the contents do.
-     */
-    private final List<FoodItem> foodItems;
+    private final List<MenuItem> menuItems;
 
-    /**
-     * Constructor
-     */
     public Menu() {
-        this.foodItems = new ArrayList<>();
+        this.menuItems = new ArrayList<>();
     }
 
-    /**
-     * Add a new food item to the menu.
-     */
-    public void addFoodItem(FoodItem foodItem) {
+    public void addMenuItem(MenuItem menuItem) {
 
-        Objects.requireNonNull(foodItem, "Food item cannot be null.");
+        Objects.requireNonNull(menuItem, "Menu item cannot be null.");
 
-        if (findFoodById(foodItem.getId()) != null) {
+        if (findFoodByName(menuItem.getFoodItem().getName()) != null) {
             throw new IllegalArgumentException(
-                    "Food Item with ID "
-                            + foodItem.getId()
+                    "Food Item "
+                            + menuItem.getFoodItem().getName()
                             + " already exists."
             );
         }
 
-        foodItems.add(foodItem);
+        menuItems.add(menuItem);
     }
 
-    /**
-     * Remove food item by ID.
-     */
-    public void removeFoodItem(int foodItemId) {
+    public void removeMenuItem(String foodName) {
 
-        FoodItem foodItem = findFoodById(foodItemId);
+        MenuItem menuItem = findFoodByName(foodName);
 
-        if (foodItem == null) {
+        if (menuItem == null) {
             throw new IllegalArgumentException(
-                    "Food Item with ID "
-                            + foodItemId
+                    "Food Item "
+                            + foodName
                             + " not found."
             );
         }
 
-        foodItems.remove(foodItem);
+        menuItems.remove(menuItem);
     }
 
-    /**
-     * Search food by ID.
-     */
-    public FoodItem findFoodById(int foodItemId) {
-
-        for (FoodItem foodItem : foodItems) {
-
-            if (foodItem.getId() == foodItemId) {
-                return foodItem;
-            }
-
-        }
-
-        return null;
-    }
-
-    /**
-     * Search food by Name.
-     */
-    public FoodItem findFoodByName(String foodName) {
+    public MenuItem findFoodByName(String foodName) {
 
         Objects.requireNonNull(foodName, "Food name cannot be null.");
 
-        for (FoodItem foodItem : foodItems) {
+        for (MenuItem menuItem : menuItems) {
 
-            if (foodItem.getName().equalsIgnoreCase(foodName)) {
-                return foodItem;
+            if (menuItem.getFoodItem()
+                    .getName()
+                    .equalsIgnoreCase(foodName)) {
+
+                return menuItem;
             }
-
         }
 
         return null;
     }
 
-    /**
-     * Returns all available food items.
-     */
-    public List<FoodItem> getAvailableFoodItems() {
+    public List<MenuItem> getAvailableMenuItems() {
 
-        List<FoodItem> availableFoodItems = new ArrayList<>();
+        List<MenuItem> availableMenuItems = new ArrayList<>();
 
-        for (FoodItem foodItem : foodItems) {
+        for (MenuItem menuItem : menuItems) {
 
-            if (foodItem.isAvailable()) {
-                availableFoodItems.add(foodItem);
+            if (menuItem.isAvailable()) {
+                availableMenuItems.add(menuItem);
             }
-
         }
 
-        return Collections.unmodifiableList(availableFoodItems);
+        return Collections.unmodifiableList(availableMenuItems);
     }
 
-    /**
-     * Returns all vegetarian food items.
-     */
-    public List<FoodItem> getVegFoodItems() {
+    public List<MenuItem> getVegMenuItems() {
 
-        List<FoodItem> vegFoodItems = new ArrayList<>();
+        List<MenuItem> vegMenuItems = new ArrayList<>();
 
-        for (FoodItem foodItem : foodItems) {
+        for (MenuItem menuItem : menuItems) {
 
-            if (foodItem.getFoodType() == FoodType.VEG) {
-                vegFoodItems.add(foodItem);
+            if (menuItem.getFoodItem().getFoodType() == FoodType.VEG) {
+                vegMenuItems.add(menuItem);
             }
-
         }
 
-        return Collections.unmodifiableList(vegFoodItems);
+        return Collections.unmodifiableList(vegMenuItems);
     }
 
-    /**
-     * Returns the complete menu as a read-only list.
-     */
-    public List<FoodItem> getFoodItems() {
-        return Collections.unmodifiableList(foodItems);
+    public List<MenuItem> getMenuItems() {
+        return Collections.unmodifiableList(menuItems);
     }
-
 }

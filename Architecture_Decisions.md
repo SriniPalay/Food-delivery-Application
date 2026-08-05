@@ -321,3 +321,295 @@ Sprint 1 requirements.
 Future modifications
 should be driven only
 by new business requirements.
+
+# Architectural Decisions
+
+...
+
+# AD-018 — Cart is an Entity
+
+## Decision
+
+Model Cart as an Entity rather than a Value Object.
+
+## Why
+
+A Cart has:
+
+- Identity
+- Lifecycle
+- Mutable state
+- Owner (Customer)
+
+Its contents change over time while it remains the same Cart.
+
+---
+
+# AD-019 — Customer Owns Cart
+
+## Decision
+
+Customer owns and creates Cart.
+
+```java
+private final Cart cart;
+```
+
+```java
+public Customer(...) {
+    this.cart = new Cart();
+}
+```
+
+## Alternatives Considered
+
+### Main.java creates Cart
+
+Rejected.
+
+Ownership should imply creation.
+
+### Dependency Injection
+
+Not required for our current domain model.
+
+---
+
+# AD-020 — Cart Does Not Reference Customer
+
+## Decision
+
+Keep the relationship unidirectional.
+
+```text
+Customer
+    │
+    ▼
+Cart
+```
+
+## Why
+
+Cart never requires Customer information to perform its business operations.
+
+Avoid unnecessary coupling.
+
+---
+
+# AD-021 — Cart Owns CartItem
+
+## Decision
+
+Cart creates and manages CartItems internally.
+
+Public API
+
+```java
+cart.addMenuItem(menuItem);
+```
+
+Internal implementation
+
+```java
+new CartItem(menuItem);
+```
+
+## Why
+
+CartItem has no independent lifecycle.
+
+Outside the Cart, a CartItem has no business meaning.
+
+---
+
+# AD-022 — One Cart Contains Items From One Restaurant
+
+## Decision
+
+A Cart may contain items from only one Restaurant.
+
+## Why
+
+Matches Swiggy's business behaviour.
+
+Attempting to add items from another restaurant should fail.
+
+The frontend decides whether to replace the cart.
+
+---
+
+# AD-023 — Backend Rejects, Frontend Confirms
+
+## Decision
+
+Backend throws an exception.
+
+```java
+throw new IllegalStateException(...)
+```
+
+Frontend asks:
+
+```
+Replace Cart?
+```
+
+## Why
+
+Business validation belongs in the backend.
+
+User interaction belongs in the frontend.
+
+---
+
+# AD-024 — Cart Stores Restaurant Explicitly
+
+## Decision
+
+```java
+private Restaurant restaurant;
+```
+
+instead of deriving it from the first CartItem.
+
+## Alternatives Considered
+
+### cartItems.get(0)
+
+Rejected.
+
+Reasons:
+
+- Assumes collection ordering
+- Less expressive
+- More conditional logic
+- Business concept becomes hidden
+
+---
+
+# AD-025 — Cart Stores CartItems, Not FoodItems
+
+## Decision
+
+```java
+List<CartItem>
+```
+
+instead of
+
+```java
+List<FoodItem>
+```
+
+## Why
+
+Each cart entry owns additional state:
+
+- Quantity
+- Instructions
+- Future customizations
+- Subtotal
+
+A FoodItem represents the product.
+
+A CartItem represents the customer's selection.
+
+---
+
+# AD-026 — Read-Only Collection Exposure
+
+## Decision
+
+Expose
+
+```java
+Collections.unmodifiableList(cartItems)
+```
+
+instead of returning the internal list.
+
+## Why
+
+Prevent callers from bypassing Cart's business rules.
+
+All modifications must go through Cart methods.
+
+---
+
+# AD-027 — Cart Does Not Store Total
+
+## Decision
+
+Calculate total dynamically.
+
+```java
+cart.getTotal()
+```
+
+## Alternatives Considered
+
+Store
+
+```java
+private BigDecimal total;
+```
+
+Rejected.
+
+## Why
+
+Stored totals can become inconsistent.
+
+Derived values remain correct.
+
+---
+
+# AD-028 — Introduce MenuItem Between Menu and FoodItem
+
+## Previous Design
+
+```
+Restaurant
+    ↓
+Menu
+    ↓
+FoodItem
+```
+
+## Problem
+
+FoodItem incorrectly appeared to belong directly to a Restaurant.
+
+Different restaurants may sell the same FoodItem at different prices.
+
+Calling
+
+```java
+foodItem.getRestaurant()
+```
+
+revealed the flaw.
+
+## New Design
+
+```
+Restaurant
+    ↓
+Menu
+    ↓
+MenuItem
+    ↓
+FoodItem
+```
+
+## Benefits
+
+- Restaurant-specific pricing
+- Restaurant-specific availability
+- Reusable FoodItem catalog
+- Cleaner domain model
+- Easier future expansion
+
+Status:
+
+Approved for refactoring in Day 10.

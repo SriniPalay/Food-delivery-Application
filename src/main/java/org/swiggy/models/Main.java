@@ -56,16 +56,20 @@ public class Main {
                 new FoodItem(
                         1,
                         "Mushroom Biryani",
-                        BigDecimal.valueOf(400),
                         FoodType.VEG,
                         FoodCategory.MAIN_COURSE
                 );
 
+        MenuItem paradiseBiryani =
+                new MenuItem(
+                        mushroomBiryani,
+                        BigDecimal.valueOf(400),
+                        true
+                );
         FoodItem paneerButterMasala =
                 new FoodItem(
                         2,
                         "Paneer Butter Masala",
-                        BigDecimal.valueOf(320),
                         FoodType.VEG,
                         FoodCategory.MAIN_COURSE
                 );
@@ -74,7 +78,6 @@ public class Main {
                 new FoodItem(
                         3,
                         "Veg Fried Rice",
-                        BigDecimal.valueOf(250),
                         FoodType.VEG,
                         FoodCategory.MAIN_COURSE
                 );
@@ -83,7 +86,6 @@ public class Main {
                 new FoodItem(
                         4,
                         "Coffee",
-                        BigDecimal.valueOf(80),
                         FoodType.VEG,
                         FoodCategory.BEVERAGE
                 );
@@ -99,10 +101,6 @@ public class Main {
 
         System.out.println("\nAdding Food Items to Restaurant Menu...");
 
-        paradise.getMenu().addFoodItem(mushroomBiryani);
-        paradise.getMenu().addFoodItem(paneerButterMasala);
-        paradise.getMenu().addFoodItem(vegFriedRice);
-        paradise.getMenu().addFoodItem(coffee);
 
         System.out.println("Menu Populated Successfully.");
 
@@ -168,12 +166,12 @@ public class Main {
          * ======================================
          */
 
-        List<FoodItem> vegItems =
-                paradise.getMenu().getVegFoodItems();
-
-        System.out.println("\nVeg Menu");
-
-        vegItems.forEach(System.out::println);
+//        List<MenuItem> vegItems =
+//                paradise.getMenu().getVegFoodItems();
+//
+//        System.out.println("\nVeg Menu");
+//
+//        vegItems.forEach(System.out::println);
 
 
         /*
