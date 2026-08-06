@@ -613,3 +613,128 @@ FoodItem
 Status:
 
 Approved for refactoring in Day 10.
+# AD-029 — Introduce MenuItem
+
+## Decision
+
+Introduce MenuItem between Menu and FoodItem.
+
+Restaurant
+↓
+Menu
+↓
+MenuItem
+↓
+FoodItem
+
+## Why
+
+Restaurant-specific information belongs to MenuItem:
+
+- Price
+- Availability
+
+FoodItem becomes a reusable catalog object.
+
+---
+
+# AD-030 — FoodItem No Longer Owns Price
+
+## Decision
+
+Move price from FoodItem to MenuItem.
+
+## Why
+
+Different restaurants may sell the same FoodItem at different prices.
+
+Price belongs to the restaurant's offering, not the product itself.
+
+---
+
+# AD-031 — Menu Searches by FoodItem ID
+
+## Decision
+
+Replace
+
+findFoodByName(String)
+
+with
+
+findMenuItemByFoodItemId(int)
+
+## Why
+
+Names are mutable.
+
+IDs are stable.
+
+Entities should be searched by identity.
+
+---
+
+# AD-032 — Menu Does Not Override equals()
+
+## Decision
+
+Menu will not override equals() or hashCode().
+
+## Why
+
+Menu has no independent identity.
+
+Restaurant owns exactly one Menu.
+
+No business requirement exists for comparing Menu objects.
+
+---
+
+# AD-033 — CartItem Starts with Quantity One
+
+## Decision
+
+CartItem constructor always creates
+
+quantity = 1
+
+## Why
+
+A CartItem represents a newly selected item.
+
+Increasing quantity is a business operation, not constructor responsibility.
+
+---
+
+# AD-034 — CartItem Calculates Its Own Subtotal
+
+## Decision
+
+Subtotal belongs to CartItem.
+
+## Why
+
+CartItem already owns:
+
+- MenuItem
+- Quantity
+
+Behavior should remain close to the data it requires.
+
+Supports Tell, Don't Ask.
+
+---
+
+# AD-035 — CartItem Does Not Override equals()
+
+## Decision
+
+CartItem will not override equals() or hashCode().
+
+## Why
+
+Cart never compares CartItems directly.
+
+Duplicate detection is based on FoodItem identity.
+
+Adding unnecessary equality methods increases maintenance without business value.

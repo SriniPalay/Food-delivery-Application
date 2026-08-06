@@ -1198,3 +1198,265 @@ MenuItem
 FoodItem
 
 Good engineers improve the model rather than adding workarounds.
+
+## Principle #76 — Constructors Should Reuse Business Methods
+
+If a constructor and a business method perform the same validation, reuse the business method instead of duplicating logic.
+
+Example:
+
+public MenuItem(...) {
+updatePrice(price);
+}
+
+instead of
+
+this.price = validate(price);
+
+Benefits:
+
+- One validation
+- One maintenance point
+- No duplicated business rules
+
+---
+
+## Principle #77 — Separate Commands from Queries
+
+A method should either:
+
+- Modify state (Command)
+
+OR
+
+- Return information (Query)
+
+Commands:
+
+- updatePrice()
+- increaseQuantity()
+- decreaseQuantity()
+- addAddress()
+
+Queries:
+
+- getPrice()
+- getSubtotal()
+- getQuantity()
+- isAvailable()
+
+Keeping commands and queries separate makes APIs easier to understand.
+
+---
+
+## Principle #78 — Prefer Intention-Revealing Methods
+
+Avoid generic setters.
+
+Good:
+
+markAvailable()
+
+increaseQuantity()
+
+renameFoodItem()
+
+checkout()
+
+Avoid:
+
+setAvailable(true)
+
+setQuantity(5)
+
+Business methods communicate intent.
+
+---
+
+## Principle #79 — Normalize During Every State Change
+
+If a value is normalized during object creation, it must also be normalized whenever it changes.
+
+Example:
+
+Constructor
+
+this.name = normalize(name);
+
+Rename
+
+this.name = normalize(newName);
+
+Objects should never exist in multiple formats.
+
+---
+
+## Principle #80 — Good Refactoring Makes Classes Simpler
+
+Introducing a new class should usually reduce responsibilities in existing classes.
+
+Example:
+
+FoodItem
+
+Before:
+
+- Name
+- Price
+- Availability
+
+After introducing MenuItem:
+
+- Name
+- FoodType
+- Category
+
+Responsibilities moved to the object that naturally owns them.
+
+---
+
+## Principle #81 — Search Entities by Identity
+
+Entities should be searched using stable identifiers.
+
+Good:
+
+foodItemId
+
+customerId
+
+orderId
+
+Avoid:
+
+foodName
+
+customerName
+
+Names change.
+
+IDs do not.
+
+---
+
+## Principle #82 — Don't Implement Methods Without Business Need
+
+Never override equals(), hashCode(), or add helper methods simply because "every class has them."
+
+Ask:
+
+"Does the business require this behavior?"
+
+If the answer is no,
+
+don't implement it.
+
+---
+
+## Principle #83 — Generalize Only After Multiple Use Cases
+
+Don't build generic frameworks because they might be useful later.
+
+Start with clear business methods.
+
+Example:
+
+getVegMenuItems()
+
+Only generalize to filtering engines after multiple real business requirements appear.
+
+YAGNI (You Aren't Gonna Need It).
+
+---
+
+## Principle #84 — Owned Objects Without Identity Are Value Objects
+
+If an object
+
+- has no independent lifecycle,
+- has no independent identity,
+- cannot exist outside its owner,
+
+it is usually a Value Object.
+
+Examples:
+
+Address
+
+CartItem
+
+OrderLine
+
+InvoiceLine
+
+---
+
+## Principle #85 — Constructors Create Valid Objects
+
+Constructors establish the first valid state.
+
+Business methods evolve the object afterward.
+
+Example:
+
+CartItem starts with
+
+quantity = 1
+
+instead of accepting arbitrary quantities.
+
+---
+
+## Principle #86 — Every Object Protects Its Own Invariants
+
+Objects should never allow themselves to enter an invalid state.
+
+Example:
+
+CartItem never allows
+
+quantity < 1
+
+Instead of trusting callers,
+
+the object protects itself.
+
+---
+
+## Principle #87 — Never Pass an Object Its Own Data
+
+If an object already owns the information,
+
+don't pass that same information back as parameters.
+
+Bad:
+
+cartItem.getSubtotal(price, quantity);
+
+Good:
+
+cartItem.getSubtotal();
+
+Objects should use their own state whenever possible.
+
+---
+
+## Principle #88 — Tell, Don't Ask
+
+Instead of asking an object for its data and doing the work elsewhere,
+
+tell the object what you want.
+
+Bad:
+
+price = cartItem.getMenuItem().getPrice();
+
+quantity = cartItem.getQuantity();
+
+calculate(price, quantity);
+
+Good:
+
+cartItem.getSubtotal();
+
+Behavior belongs with the data.
