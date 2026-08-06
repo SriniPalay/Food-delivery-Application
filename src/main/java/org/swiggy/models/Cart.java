@@ -1,12 +1,13 @@
 package org.swiggy.models;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
 public class Cart {
-    private final List<CartItems> cartItems;
+    private final List<CartItem> cartItems;
     private Restaurant restaurant;
 
     public Cart() {
@@ -15,13 +16,13 @@ public class Cart {
     public Restaurant getRestaurant() {
         return restaurant;
     }
-    public List<CartItems> getCartItems() {
+    public List<CartItem> getCartItems() {
         return Collections.unmodifiableList(cartItems);
     }
     public void addFoodItem(MenuItem menuItem){
         Objects.requireNonNull(menuItem, "Food item cannot be null.");
 
-        CartItems existingItem = findCartItem(menuItem.getFoodItem().getName());
+        CartItem existingItem = findCartItem(menuItem.getFoodItem().getFoodItemId());
         if (existingItem != null) {
             existingItem.increaseQuantity();
             return;
@@ -60,7 +61,7 @@ public class Cart {
         BigDecimal total = BigDecimal.ZERO;
 
         for (CartItem cartItem : cartItems) {
-            total = total.add(cartItem.getSubtotal());
+            total = total.add(cartItem.getSubTotal());
         }
 
         return total;
