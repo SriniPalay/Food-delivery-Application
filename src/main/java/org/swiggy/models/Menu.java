@@ -16,19 +16,22 @@ public class Menu {
         this.menuItems = new ArrayList<>();
     }
 
-    public void addMenuItem(MenuItem menuItem) {
+    public void addMenuItem(MenuItem menuItem){
+        Objects.requireNonNull(menuItem,"Menu Item cannot be null.");
 
-        Objects.requireNonNull(menuItem, "Menu item cannot be null.");
-
-        if (findFoodByName(menuItem.getFoodItem().getName()) != null) {
-            throw new IllegalArgumentException(
-                    "Food Item "
-                            + menuItem.getFoodItem().getName()
-                            + " already exists."
-            );
+        if (findMenuItemByFoodItemId(menuItem.getFoodItem().getFoodItemId())){
+            throw new IllegalArgumentException("Food Item already exists in the menu.");
         }
-
         menuItems.add(menuItem);
+    }
+
+    private boolean findMenuItemByFoodItemId (int itemId){
+        for (MenuItem menuItem: menuItems){
+            if (menuItem.getFoodItem().getFoodItemId()==itemId){
+                return true;
+            }
+        }
+        return false;
     }
 
     public void removeMenuItem(String foodName) {

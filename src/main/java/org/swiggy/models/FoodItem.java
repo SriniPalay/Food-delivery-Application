@@ -2,103 +2,52 @@ package org.swiggy.models;
 
 import org.swiggy.enums.FoodCategory;
 import org.swiggy.enums.FoodType;
-
-import java.math.BigDecimal;
 import java.util.Objects;
 
 public class FoodItem {
     // Unique identifier
-    private final int id;
-
+    private final int foodItemId;
     // Food name can be renamed
     private String name;
-
-    // Optional description
-    private String description;
-
-    // Price changes over time
-
     // Veg / Non Veg never changes
     private final FoodType foodType;
-
     // Category never changes
     private final FoodCategory category;
 
-    // Restaurant can mark unavailable
-    private boolean available;
-
-    public FoodItem(int id,
+    public FoodItem(int foodItemid,
                     String name,
                     FoodType foodType,
                     FoodCategory category) {
-        if (id <= 0) {
-            throw new IllegalArgumentException("Food ID must be greater than zero.");
-        }
+        this.foodItemId = validateFoodItemId(foodItemid);
+        this.name = normalizeName(name);
+        this.foodType =
+                Objects.requireNonNull(foodType, "Food type cannot be null.");
 
-        if (name == null || name.isBlank()) {
+        this.category =
+                Objects.requireNonNull(category, "Food category cannot be null.");
+    }
+    public void renameFoodItem(String newName){
+        this.name = normalizeName(newName);
+    }
+    private int validateFoodItemId(int foodItemid){
+        if (foodItemid<=0){
+            throw new IllegalArgumentException("Food item ID cannot be zero or less than zero");
+        }
+        return foodItemid;
+    }
+    private String normalizeName(String name){
+        if (name == null || name.isBlank()){
             throw new IllegalArgumentException("Food name cannot be empty.");
         }
-
-
-        Objects.requireNonNull(foodType, "Food type cannot be null.");
-
-        Objects.requireNonNull(category, "Category cannot be null.");
-
-        this.id = id;
-        this.name = name;
-        this.foodType = foodType;
-        this.category = category;
-
-        this.available = true;
+        return name.trim();
     }
-    public void renameFoodItem(String newName) {
-
-        if (newName == null || newName.isBlank()) {
-            throw new IllegalArgumentException("Food name cannot be empty.");
-        }
-
-        this.name = newName;
-    }
-
-    /**
-     * Update description
-     */
-    public void updateDescription(String description) {
-        this.description = description;
-    }
-
-    /**
-     * Update price
-     */
-
-    /**
-     * Mark unavailable
-     */
-    public void markUnavailable() {
-        this.available = false;
-    }
-
-    /**
-     * Mark available
-     */
-    public void markAvailable() {
-        this.available = true;
-    }
-
-    // ---------------- Getters ----------------
-
-    public int getId() {
-        return id;
+    public int getFoodItemId() {
+        return foodItemId;
     }
 
     public String getName() {
         return name;
     }
-
-    public String getDescription() {
-        return description;
-    }
-
 
     public FoodType getFoodType() {
         return foodType;
@@ -107,14 +56,37 @@ public class FoodItem {
     public FoodCategory getCategory() {
         return category;
     }
+    // ---------------- Equality ----------------
 
-    public boolean isAvailable() {
-        return available;
-    }
     @Override
-    public String toString(){
-        return this.name;
+    public boolean equals(Object obj) {
+
+        if (this == obj) {
+            return true;
+        }
+
+        if (!(obj instanceof FoodItem other)) {
+            return false;
+        }
+
+        return foodItemId == other.foodItemId;
     }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(foodItemId);
+    }
+
+    @Override
+    public String toString() {
+        return "FoodItem{" +
+                "foodItemId=" + foodItemId +
+                ", name='" + name + '\'' +
+                ", foodType=" + foodType +
+                ", category=" + category +
+                '}';
+    }
+
 
 
 

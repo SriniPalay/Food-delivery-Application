@@ -6,51 +6,37 @@ import java.util.Objects;
 public final class MenuItem {
 
     private final FoodItem foodItem;
-
     private BigDecimal price;
     private boolean available;
-
     public MenuItem(FoodItem foodItem,
                     BigDecimal price,
-                    boolean available) {
-
-        this.foodItem = foodItem;
-        this.price = Objects.requireNonNull(price, "Price cannot be null.");
+                    boolean available){
+        this.foodItem = Objects.requireNonNull(foodItem, "Food Item cannot be null.");
+        updatePrice(price);
         this.available = available;
     }
-
-    public FoodItem getFoodItem() {
-        return foodItem;
+    public void updatePrice(BigDecimal price){
+        Objects.requireNonNull(price,"Price cannot be null");
+        if (price.compareTo(BigDecimal.ZERO)<=0){
+            throw new IllegalArgumentException("Price must be greater than Zero");
+        }
+        this.price = price;
     }
-    public String getFoodItemName() {
-        return foodItem.getName();
-    }
-
-    public void remove(String foodItem){
-
-    }
-
-
-    public BigDecimal getPrice() {
-        return price;
-    }
-
-    public boolean isAvailable() {
-        return available;
-    }
-
-    public void updatePrice(BigDecimal price) {
-        this.price = Objects.requireNonNull(price, "Price cannot be null.");
-    }
-
-    public void markAvailable() {
+    public void markAvailable(){
         this.available = true;
     }
-
-    public void markUnavailable() {
+    public void markUnavailable(){
         this.available = false;
     }
-
+    public boolean isAvailable(){
+        return available;
+    }
+    public FoodItem getFoodItem(){
+        return foodItem;
+    }
+    public BigDecimal getPrice(){
+        return price;
+    }
     @Override
     public String toString() {
         return "MenuItem{" +
