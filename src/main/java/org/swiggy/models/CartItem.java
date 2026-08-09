@@ -32,9 +32,9 @@ public final class CartItem {
         }
         quantity-=1;
     }
-    public BigDecimal getSubTotal(){
-        BigDecimal subTotal = menuItem.getPrice().multiply(BigDecimal.valueOf(quantity));
-        return subTotal;
+    public BigDecimal getSubtotal(){
+        BigDecimal subtotal = menuItem.getPrice().multiply(BigDecimal.valueOf(quantity));
+        return subtotal;
     }
     @Override
     public String toString() {

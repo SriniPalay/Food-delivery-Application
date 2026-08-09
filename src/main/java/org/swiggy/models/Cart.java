@@ -19,14 +19,29 @@ public class Cart {
     public List<CartItem> getCartItems() {
         return Collections.unmodifiableList(cartItems);
     }
-    public void addFoodItem(MenuItem menuItem){
+    public void addMenuItem(MenuItem menuItem){
         Objects.requireNonNull(menuItem, "Food item cannot be null.");
 
-        CartItem existingItem = findCartItem(menuItem.getFoodItem().getFoodItemId());
+        Restaurant itemRestaurant =
+                menuItem.getRestaurant();
+
+        if (restaurant == null) {
+            restaurant = itemRestaurant;
+        } else if (!restaurant.equals(itemRestaurant)) {
+            throw new IllegalStateException(
+                    "Cart already contains items from another restaurant."
+            );
+        }
+        CartItem existingItem =
+                findCartItem(
+                        menuItem.getFoodItem().getFoodItemId()
+                );
+
         if (existingItem != null) {
             existingItem.increaseQuantity();
             return;
         }
+
         cartItems.add(new CartItem(menuItem));
     }
     public void removeMenuItem(int foodItemId) {
@@ -61,7 +76,7 @@ public class Cart {
         BigDecimal total = BigDecimal.ZERO;
 
         for (CartItem cartItem : cartItems) {
-            total = total.add(cartItem.getSubTotal());
+            total = total.add(cartItem.getSubtotal());
         }
 
         return total;
