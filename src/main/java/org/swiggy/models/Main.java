@@ -4,28 +4,18 @@ import org.swiggy.enums.FoodCategory;
 import org.swiggy.enums.FoodType;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 public class Main {
 
     public static void main(String[] args) {
 
-        System.out.println("======================================");
-        System.out.println("     SWIGGY BACKEND - DEMO PROJECT");
-        System.out.println("======================================");
+        // --------------------------------------------------
+        // 1. Create Address
+        // --------------------------------------------------
 
-
-        /*
-         * ======================================
-         * Restaurant Registration
-         * ======================================
-         */
-
-        System.out.println("\nCreating Restaurant...");
-
-        Address restaurantAddress =
+        Address paradiseAddress =
                 new Address(
-                        "12-101",
+                        "Hno-102",
                         "MG Road",
                         "Kukatpally",
                         "Hyderabad",
@@ -33,189 +23,322 @@ public class Main {
                         "500072"
                 );
 
+        // --------------------------------------------------
+        // 2. Create Restaurant
+        // --------------------------------------------------
+
         Restaurant paradise =
                 new Restaurant(
                         1,
                         "Paradise",
-                        restaurantAddress
+                        paradiseAddress
                 );
 
-        System.out.println("Restaurant Created Successfully.");
-        System.out.println(paradise);
+        // --------------------------------------------------
+        // 3. Create FoodItems
+        // --------------------------------------------------
 
-
-        /*
-         * ======================================
-         * Food Item Creation
-         * ======================================
-         */
-
-        System.out.println("\nCreating Food Items...");
-
-        FoodItem mushroomBiryani =
+        FoodItem biryaniFood =
                 new FoodItem(
-                        1,
+                        101,
                         "Mushroom Biryani",
                         FoodType.VEG,
                         FoodCategory.MAIN_COURSE
                 );
 
-        MenuItem paradiseBiryani =
+        FoodItem paneerFood =
+                new FoodItem(
+                        102,
+                        "Paneer Tikka",
+                        FoodType.VEG,
+                        FoodCategory.STARTER
+                );
+
+        // --------------------------------------------------
+        // 4. Create MenuItems
+        //    MenuItem belongs to a Restaurant
+        // --------------------------------------------------
+
+        MenuItem biryani =
                 new MenuItem(
-                        mushroomBiryani,
+                        paradise,
+                        biryaniFood,
                         BigDecimal.valueOf(400),
                         true
                 );
-        FoodItem paneerButterMasala =
-                new FoodItem(
-                        2,
-                        "Paneer Butter Masala",
-                        FoodType.VEG,
-                        FoodCategory.MAIN_COURSE
+
+        MenuItem paneerTikka =
+                new MenuItem(
+                        paradise,
+                        paneerFood,
+                        BigDecimal.valueOf(250),
+                        true
                 );
 
-        FoodItem vegFriedRice =
-                new FoodItem(
-                        3,
-                        "Veg Fried Rice",
-                        FoodType.VEG,
-                        FoodCategory.MAIN_COURSE
-                );
+        // --------------------------------------------------
+        // 5. Add MenuItems to Restaurant's Menu
+        // --------------------------------------------------
 
-        FoodItem coffee =
-                new FoodItem(
-                        4,
-                        "Coffee",
-                        FoodType.VEG,
-                        FoodCategory.BEVERAGE
-                );
+        paradise.getMenu().addMenuItem(biryani);
+        paradise.getMenu().addMenuItem(paneerTikka);
 
-        System.out.println("Food Items Created Successfully.");
+        System.out.println("------ MENU ------");
 
+        System.out.println(
+                paradise.getMenu().getMenuItems()
+        );
 
-        /*
-         * ======================================
-         * Menu Population
-         * ======================================
-         */
+        System.out.println(
+                "Available: "
+                        + paradise.getMenu()
+                        .getAvailableMenuItems()
+        );
 
-        System.out.println("\nAdding Food Items to Restaurant Menu...");
+        System.out.println(
+                "Veg Items: "
+                        + paradise.getMenu()
+                        .getVegMenuItems()
+        );
 
-
-        System.out.println("Menu Populated Successfully.");
-
-
-        /*
-         * ======================================
-         * Customer Registration
-         * ======================================
-         */
-
-        System.out.println("\nRegistering Customer...");
+        // --------------------------------------------------
+        // 6. Create Customer
+        // --------------------------------------------------
 
         Customer customer =
                 new Customer(
                         101,
                         "Rukmini",
                         "9876543210",
-                        "rukmini@gmail.com"
+                        "srinivasan@gmail.com"
                 );
 
-        System.out.println("Customer Registered Successfully.");
+        customer.addAddress(paradiseAddress);
 
+        System.out.println("\n------ CUSTOMER ------");
 
-        /*
-         * ======================================
-         * Customer Address Management
-         * ======================================
-         */
+        System.out.println(
+                "Addresses: "
+                        + customer.getAllAddress()
+        );
 
-        Address homeAddress =
+        // --------------------------------------------------
+        // 7. Get Customer's Cart
+        // --------------------------------------------------
+
+        Cart cart = customer.getCart();
+
+        // --------------------------------------------------
+        // 8. Add first item
+        // --------------------------------------------------
+
+        System.out.println("\n------ ADD BIRYANI ------");
+
+        cart.addMenuItem(biryani);
+
+        System.out.println(
+                "Restaurant: "
+                        + cart.getRestaurant()
+        );
+
+        System.out.println(
+                "Cart Items: "
+                        + cart.getCartItems()
+        );
+
+        System.out.println(
+                "Total: "
+                        + cart.getTotal()
+        );
+
+        // --------------------------------------------------
+        // 9. Add same item again
+        // --------------------------------------------------
+
+        System.out.println("\n------ ADD BIRYANI AGAIN ------");
+
+        cart.addMenuItem(biryani);
+
+        System.out.println(
+                "Cart Items: "
+                        + cart.getCartItems()
+        );
+
+        System.out.println(
+                "Total: "
+                        + cart.getTotal()
+        );
+
+        // Expected:
+        // Biryani quantity = 2
+        // Total = 800
+
+        // --------------------------------------------------
+        // 10. Add another item from SAME restaurant
+        // --------------------------------------------------
+
+        System.out.println("\n------ ADD PANEER TIKKA ------");
+
+        cart.addMenuItem(paneerTikka);
+
+        System.out.println(
+                "Cart Items: "
+                        + cart.getCartItems()
+        );
+
+        System.out.println(
+                "Total: "
+                        + cart.getTotal()
+        );
+
+        // Expected:
+        // Biryani × 2 = 800
+        // Paneer Tikka × 1 = 250
+        // Total = 1050
+
+        // --------------------------------------------------
+        // 11. Remove one quantity of Biryani
+        // --------------------------------------------------
+
+        System.out.println("\n------ REMOVE ONE BIRYANI ------");
+
+        cart.removeMenuItem(
+                biryaniFood.getFoodItemId()
+        );
+
+        System.out.println(
+                "Cart Items: "
+                        + cart.getCartItems()
+        );
+
+        System.out.println(
+                "Total: "
+                        + cart.getTotal()
+        );
+
+        // Expected:
+        // Biryani × 1
+        // Paneer Tikka × 1
+        // Total = 650
+
+        // --------------------------------------------------
+        // 12. Remove Biryani completely
+        // --------------------------------------------------
+
+        System.out.println("\n------ REMOVE BIRYANI ------");
+
+        cart.removeMenuItem(
+                biryaniFood.getFoodItemId()
+        );
+
+        System.out.println(
+                "Cart Items: "
+                        + cart.getCartItems()
+        );
+
+        // Expected:
+        // Paneer Tikka × 1
+
+        // --------------------------------------------------
+        // 13. Remove final item
+        // --------------------------------------------------
+
+        System.out.println("\n------ REMOVE FINAL ITEM ------");
+
+        cart.removeMenuItem(
+                paneerFood.getFoodItemId()
+        );
+
+        System.out.println(
+                "Cart Empty: "
+                        + cart.isEmpty()
+        );
+
+        System.out.println(
+                "Restaurant: "
+                        + cart.getRestaurant()
+        );
+
+        // Expected:
+        // Cart Empty: true
+        // Restaurant: null
+
+        // --------------------------------------------------
+        // 14. Different Restaurant Test
+        // --------------------------------------------------
+
+        System.out.println("\n------ DIFFERENT RESTAURANT TEST ------");
+
+        Address anotherAddress =
                 new Address(
-                        "301",
-                        "JNTU Road",
-                        "KPHB",
+                        "Hno-20",
+                        "Banjara Hills",
+                        "Banjara Hills",
                         "Hyderabad",
                         "Telangana",
-                        "500085"
+                        "500034"
                 );
 
-        Address officeAddress =
-                new Address(
-                        "5th Floor",
-                        "Financial District",
-                        "Gachibowli",
-                        "Hyderabad",
-                        "Telangana",
-                        "500032"
+        Restaurant anotherRestaurant =
+                new Restaurant(
+                        2,
+                        "Another Restaurant",
+                        anotherAddress
                 );
 
-        customer.addAddress(homeAddress);
-        customer.addAddress(officeAddress);
+        FoodItem pizzaFood =
+                new FoodItem(
+                        103,
+                        "Veg Pizza",
+                        FoodType.VEG,
+                        FoodCategory.MAIN_COURSE
+                );
 
-        customer.changeDefaultAddress(officeAddress);
+        MenuItem pizza =
+                new MenuItem(
+                        anotherRestaurant,
+                        pizzaFood,
+                        BigDecimal.valueOf(300),
+                        true
+                );
 
-        System.out.println("\nCustomer Addresses:");
+        anotherRestaurant.getMenu().addMenuItem(pizza);
 
-        System.out.println(customer.getAllAddress());
-
-
-        /*
-         * ======================================
-         * Display Veg Menu
-         * ======================================
-         */
-
-//        List<MenuItem> vegItems =
-//                paradise.getMenu().getVegFoodItems();
-//
-//        System.out.println("\nVeg Menu");
-//
-//        vegItems.forEach(System.out::println);
-
-
-        /*
-         * ======================================
-         * Business Rule Validation
-         * ======================================
-         */
-
-        System.out.println("\nTesting Business Rules...");
+        // Add Paradise item first
+        cart.addMenuItem(biryani);
 
         try {
 
-            customer.addAddress(homeAddress);
+            // This should fail because pizza
+            // belongs to another restaurant.
+            cart.addMenuItem(pizza);
 
-        } catch (IllegalArgumentException ex) {
+        } catch (IllegalStateException exception) {
 
-            System.out.println(ex.getMessage());
-
+            System.out.println(
+                    "Expected exception: "
+                            + exception.getMessage()
+            );
         }
 
-        try {
+        // --------------------------------------------------
+        // 15. Final Cart State
+        // --------------------------------------------------
 
-            customer.removeAddress(officeAddress);
+        System.out.println("\n------ FINAL CART ------");
 
-        } catch (IllegalStateException ex) {
+        System.out.println(
+                "Restaurant: "
+                        + cart.getRestaurant()
+        );
 
-            System.out.println(ex.getMessage());
+        System.out.println(
+                "Items: "
+                        + cart.getCartItems()
+        );
 
-        }
-
-
-        /*
-         * ======================================
-         * Final Customer State
-         * ======================================
-         */
-
-        System.out.println("\nFinal Customer Details");
-
-        System.out.println(customer);
-
-        System.out.println("\n======================================");
-        System.out.println("      DEMO COMPLETED SUCCESSFULLY");
-        System.out.println("======================================");
-
+        System.out.println(
+                "Total: "
+                        + cart.getTotal()
+        );
     }
 }

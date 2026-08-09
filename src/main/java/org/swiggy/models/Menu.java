@@ -18,30 +18,30 @@ public class Menu {
 
     public void addMenuItem(MenuItem menuItem){
         Objects.requireNonNull(menuItem,"Menu Item cannot be null.");
-
-        if (findMenuItemByFoodItemId(menuItem.getFoodItem().getFoodItemId())){
+        MenuItem item = findMenuItemByFoodItemId(menuItem.getFoodItem().getFoodItemId());
+        if (item!=null){
             throw new IllegalArgumentException("Food Item already exists in the menu.");
         }
         menuItems.add(menuItem);
     }
 
-    private boolean findMenuItemByFoodItemId (int itemId){
+    private MenuItem findMenuItemByFoodItemId (int itemId){
         for (MenuItem menuItem: menuItems){
             if (menuItem.getFoodItem().getFoodItemId()==itemId){
-                return true;
+                return menuItem;
             }
         }
-        return false;
+        return null;
     }
 
-    public void removeMenuItem(String foodName) {
+    public void removeMenuItem(int foodItemId) {
 
-        MenuItem menuItem = findFoodByName(foodName);
+        MenuItem menuItem = findMenuItemByFoodItemId(foodItemId);
 
         if (menuItem == null) {
             throw new IllegalArgumentException(
                     "Food Item "
-                            + foodName
+                            + foodItemId
                             + " not found."
             );
         }
@@ -93,7 +93,6 @@ public class Menu {
 
         return Collections.unmodifiableList(vegMenuItems);
     }
-
     public List<MenuItem> getMenuItems() {
         return Collections.unmodifiableList(menuItems);
     }

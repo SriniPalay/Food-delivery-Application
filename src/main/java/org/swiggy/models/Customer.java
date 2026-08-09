@@ -114,6 +114,9 @@ public class Customer {
 
         this.phoneNumber = validatePhoneNumber(phoneNumber);
     }
+    public Cart getCart(){
+        return cart;
+    }
     private int validateCustomerId(int customerId){
         if (customerId<=0){
             throw new IllegalArgumentException("Customer ID must be greater than zero");

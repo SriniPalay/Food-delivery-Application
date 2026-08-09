@@ -6,14 +6,17 @@ import java.util.Objects;
 public final class MenuItem {
 
     private final FoodItem foodItem;
+    public Restaurant restaurant;
     private BigDecimal price;
     private boolean available;
-    public MenuItem(FoodItem foodItem,
+    public MenuItem(Restaurant restaurant,
+                    FoodItem foodItem,
                     BigDecimal price,
                     boolean available){
         this.foodItem = Objects.requireNonNull(foodItem, "Food Item cannot be null.");
         updatePrice(price);
         this.available = available;
+        this.restaurant = restaurant;
     }
     public void updatePrice(BigDecimal price){
         Objects.requireNonNull(price,"Price cannot be null");
@@ -36,6 +39,9 @@ public final class MenuItem {
     }
     public BigDecimal getPrice(){
         return price;
+    }
+    public Restaurant getRestaurant(){
+        return restaurant;
     }
     @Override
     public String toString() {
