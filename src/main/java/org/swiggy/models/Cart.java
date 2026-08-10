@@ -9,7 +9,6 @@ import java.util.Objects;
 public class Cart {
     private final List<CartItem> cartItems;
     private Restaurant restaurant;
-
     public Cart() {
         this.cartItems = new ArrayList<>();
     }
