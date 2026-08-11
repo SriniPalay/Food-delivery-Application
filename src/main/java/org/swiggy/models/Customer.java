@@ -76,11 +76,8 @@ public class Customer {
                     "Address does not exist."
             );
         }
-
         defaultAddress = address;
     }
-
-    public void updatePrimaryAddress(){}
     public List<Address> getAllAddress(){
         return Collections.unmodifiableList(savedAddresses);
     }

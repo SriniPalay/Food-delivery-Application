@@ -7,70 +7,122 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Order {
-    private final String orderId;
-    private final Customer customer;
-    private final Restaurant restaurant;
-    private final List<FoodItem> orderItems;
-    private Address address;
-    private LocalDateTime orderTime;
+    private final int orderId;
+    private final OrderCustomer orderCustomer;
+    private final OrderRestaurant orderRestaurant;
+    private final List<OrderItem> orderItems;
+    private final Address deliveryAddress;
+    private final LocalDateTime orderDateTime;
+    private OrderStatus status;
 
-    // Transition and dynamic parts
-    private BigDecimal amount;
-    private PaymentType paymentType;
-    private OrderStatus orderStatus;
-
-    public Order(String orderId,
-                 Customer customer,
-                 Restaurant restaurant,
-                 PaymentType paymentType) {
-        this.orderId = orderId;
-        this.customer = customer;
-        this.restaurant = restaurant;
-        this.paymentType = paymentType;
-
-        this.orderStatus = OrderStatus.PLACED;
-        this.orderItems = new ArrayList<>(); // Stamps the exact time the object is created
-    }
-
-    public void addFoodItem(FoodItem item) {
-        orderItems.add(item);
-    }
-//    public double calculateTotal() {
-//
-//        double total = 0;
-//
-//        for (FoodItem item : orderItems) {
-//            total += item.getPrice();
-//        }
-//
-//        return total;
-//    }
-
-    public void accept(){
-        orderStatus = OrderStatus.ACCEPTED_BY_RESTAURANT;
-    }
-    public void prepare(){
-        if (orderStatus == OrderStatus.CANCELLED){
-            throw new IllegalStateException("Cancelled order cannot be prepared");
+    public Order(int orderId,
+                 OrderCustomer orderCustomer,
+                 OrderRestaurant orderRestaurant,
+                 List<OrderItem> orderItems,
+                 Address deliveryAddress,
+                 LocalDateTime orderDateTime) {
+        if (orderId<=0){
+            throw new IllegalArgumentException("Order ID should be greater than 0");
         }
+        Objects.requireNonNull(orderCustomer,"Customer details cannot be empty");
+        Objects.requireNonNull(orderRestaurant,"Restaurant details cannot be empty");
+        Objects.requireNonNull(orderItems,"Order item details cannot be empty");
+        if (orderItems.isEmpty()){
+            throw new IllegalArgumentException("Order Items list cannot be empty");
+        }
+        Objects.requireNonNull(
+                deliveryAddress,
+                "Delivery address cannot be null."
+        );
+
+        Objects.requireNonNull(
+                orderDateTime,
+                "Order date and time cannot be null."
+        );
+
+        this.orderId = orderId;
+        this.orderCustomer = orderCustomer;
+        this.orderRestaurant = orderRestaurant;
+
+        // Defensive copy
+        this.orderItems = List.copyOf(orderItems);
+
+        this.deliveryAddress = deliveryAddress;
+        this.orderDateTime = orderDateTime;
+
+        // Every newly created order starts in PLACED state.
+        this.status = OrderStatus.PLACED;
     }
-    public void dispatch(){
-        orderStatus = OrderStatus.READY_FOR_PICKUP;
+    public BigDecimal getTotal() {
+
+        BigDecimal total = BigDecimal.ZERO;
+
+        for (OrderItem orderItem : orderItems) {
+            total = total.add(orderItem.getSubtotal());
+        }
+
+        return total;
     }
-    public void deliver(){
-        orderStatus = OrderStatus.DELIVERED;
+    public void confirm() {
+
+        validateStatus(OrderStatus.PLACED);
+
+        status = OrderStatus.ACCEPTED_BY_RESTAURANT;
+    }
+
+    public void startPreparing() {
+
+        validateStatus(OrderStatus.ACCEPTED_BY_RESTAURANT);
+
+        status = OrderStatus.PREPARING;
+    }
+
+    public void markOutForDelivery() {
+
+        validateStatus(OrderStatus.PREPARING);
+
+        status = OrderStatus.OUT_FOR_DELIVERY;
+    }
+
+    public void markDelivered() {
+
+        validateStatus(OrderStatus.OUT_FOR_DELIVERY);
+
+        status = OrderStatus.DELIVERED;
     }
 
     public void cancel() {
 
-        if (orderStatus == OrderStatus.DELIVERED) {
-            throw new IllegalStateException("Delivered order cannot be cancelled");
+        if (status != OrderStatus.PLACED
+                && status != OrderStatus.ACCEPTED_BY_RESTAURANT) {
+
+            throw new IllegalStateException(
+                    "Order cannot be cancelled from status: " + status
+            );
         }
 
-        orderStatus = OrderStatus.CANCELLED;
+        status = OrderStatus.CANCELLED;
     }
 
+    private void validateStatus(OrderStatus expectedStatus) {
+
+        if (status != expectedStatus) {
+
+            throw new IllegalStateException(
+                    "Invalid order status transition. "
+                            + "Current status: " + status
+                            + ", expected: " + expectedStatus
+            );
+        }
+    }
+    public OrderStatus getStatus() {
+        return status;
+    }
 
 }
+
+
+
