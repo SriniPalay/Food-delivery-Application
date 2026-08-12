@@ -4,6 +4,10 @@ import org.swiggy.enums.FoodCategory;
 import org.swiggy.enums.FoodType;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.time.chrono.ChronoLocalDate;
+import java.util.List;
+import java.util.Arrays;
 
 public class Main {
 
@@ -340,5 +344,78 @@ public class Main {
                 "Total: "
                         + cart.getTotal()
         );
+        LocalDateTime localDateTime = LocalDateTime.now();;
+        LocalDateTime orderDateTime = LocalDateTime.now();
+
+        OrderCustomer orderCustomer =
+                new OrderCustomer(
+                        101,
+                        "Rukmini",
+                        "9876543210",
+                        "rukmini@example.com"
+                );
+
+        OrderRestaurant orderRestaurant =
+                new OrderRestaurant(
+                        501,
+                        "Paradise",
+                        paradiseAddress
+                );
+
+        OrderItem biryaniOrderItem =
+                new OrderItem(
+                        biryaniFood.getFoodItemId(),
+                        biryaniFood.getName(),
+                        biryani.getPrice(),
+                        1
+                );
+
+        OrderItem pizzaOrderItem =
+                new OrderItem(
+                        pizzaFood.getFoodItemId(),
+                        pizzaFood.getName(),
+                        pizza.getPrice(),
+                        1
+                );
+        List<OrderItem> orderItems =
+                List.of(
+                        biryaniOrderItem,
+                        pizzaOrderItem
+                );
+
+        Order order =
+                new Order(
+                        1001,
+                        orderCustomer,
+                        orderRestaurant,
+                        orderItems,
+                        anotherAddress,
+                        orderDateTime
+                );
+        order.acceptByRestaurant();
+        order.startPreparing();
+        order.cancel();
+
+
+        System.out.println("Initial status: " + order.getStatus());
+//
+//
+//        order.acceptByRestaurant();
+//        order.markOutForDelivery();
+//
+//        order.acceptByRestaurant();
+//        System.out.println("After confirm: " + order.getStatus());
+//
+//        order.startPreparing();
+//        System.out.println("After preparing: " + order.getStatus());
+//
+//        order.markOutForDelivery();
+//        System.out.println("After out for delivery: " + order.getStatus());
+//
+//        order.markDelivered();
+//        System.out.println("After delivered: " + order.getStatus());
+//        order.acceptByRestaurant();
+//        order.markReadyForPickup();
     }
+
 }

@@ -66,57 +66,41 @@ public class Order {
 
         return total;
     }
-    public void confirm() {
+    private void transitionTo(OrderStatus nextStatus) {
 
-        validateStatus(OrderStatus.PLACED);
+        if (!status.canTransitionTo(nextStatus)) {
+            throw new IllegalStateException(
+                    "Invalid order status transition from "
+                            + status
+                            + " to "
+                            + nextStatus
+            );
+        }
 
-        status = OrderStatus.ACCEPTED_BY_RESTAURANT;
+        status = nextStatus;
+    }
+    public void acceptByRestaurant() {
+        transitionTo(OrderStatus.ACCEPTED_BY_RESTAURANT);
     }
 
     public void startPreparing() {
+        transitionTo(OrderStatus.PREPARING);
+    }
 
-        validateStatus(OrderStatus.ACCEPTED_BY_RESTAURANT);
-
-        status = OrderStatus.PREPARING;
+    public void markReadyForPickup() {
+        transitionTo(OrderStatus.READY_FOR_PICKUP);
     }
 
     public void markOutForDelivery() {
-
-        validateStatus(OrderStatus.PREPARING);
-
-        status = OrderStatus.OUT_FOR_DELIVERY;
+        transitionTo(OrderStatus.OUT_FOR_DELIVERY);
     }
 
     public void markDelivered() {
-
-        validateStatus(OrderStatus.OUT_FOR_DELIVERY);
-
-        status = OrderStatus.DELIVERED;
+        transitionTo(OrderStatus.DELIVERED);
     }
 
     public void cancel() {
-
-        if (status != OrderStatus.PLACED
-                && status != OrderStatus.ACCEPTED_BY_RESTAURANT) {
-
-            throw new IllegalStateException(
-                    "Order cannot be cancelled from status: " + status
-            );
-        }
-
-        status = OrderStatus.CANCELLED;
-    }
-
-    private void validateStatus(OrderStatus expectedStatus) {
-
-        if (status != expectedStatus) {
-
-            throw new IllegalStateException(
-                    "Invalid order status transition. "
-                            + "Current status: " + status
-                            + ", expected: " + expectedStatus
-            );
-        }
+        transitionTo(OrderStatus.CANCELLED);
     }
     public OrderStatus getStatus() {
         return status;
