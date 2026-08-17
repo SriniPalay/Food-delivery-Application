@@ -1,7 +1,7 @@
 package org.swiggy.models;
 
 import org.swiggy.enums.OrderStatus;
-import org.swiggy.enums.PaymentType;
+//import org.swiggy.enums.PaymentType;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
