@@ -8,7 +8,12 @@ import java.util.List;
 import java.util.Objects;
 
 public class CheckoutService {
-    private static int nextOrderId=0;
+    private static int nextOrderId=1;
+
+
+    private int generateOrderId() {
+        return nextOrderId++;
+    }
     public Order checkout(Customer customer){
         Objects.requireNonNull(customer,"Customer cannot be null");
         Cart cart = customer.getCart();
@@ -63,7 +68,7 @@ public class CheckoutService {
 
         Order order =
                 new Order(
-                        nextOrderId++,
+                        generateOrderId(),
                         orderCustomer,
                         orderRestaurant,
                         orderItems,

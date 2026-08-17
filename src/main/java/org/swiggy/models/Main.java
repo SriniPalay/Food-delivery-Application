@@ -2,6 +2,7 @@ package org.swiggy.models;
 
 import org.swiggy.enums.FoodCategory;
 import org.swiggy.enums.FoodType;
+import org.swiggy.services.CheckoutService;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -383,18 +384,30 @@ public class Main {
                         pizzaOrderItem
                 );
 
+        CheckoutService checkoutService =
+                new CheckoutService();
+
         Order order =
-                new Order(
-                        1001,
-                        orderCustomer,
-                        orderRestaurant,
-                        orderItems,
-                        anotherAddress,
-                        orderDateTime
-                );
-        order.acceptByRestaurant();
-        order.startPreparing();
-        order.cancel();
+                checkoutService.checkout(customer);
+        System.out.println(order.getStatus());
+        System.out.println(order.getTotal());
+
+        System.out.println(
+                customer.getCart().isEmpty()
+        );
+
+//        Order order =
+//                new Order(
+//                        1001,
+//                        orderCustomer,
+//                        orderRestaurant,
+//                        orderItems,
+//                        anotherAddress,
+//                        orderDateTime
+//                );
+//        order.acceptByRestaurant();
+//        order.startPreparing();
+//        order.cancel();
 
 
         System.out.println("Initial status: " + order.getStatus());
