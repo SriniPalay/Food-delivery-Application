@@ -1,7 +1,7 @@
 package org.swiggy.models;
 
 import org.swiggy.enums.OrderStatus;
-import org.swiggy.enums.PaymentType;
+//import org.swiggy.enums.PaymentType;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -11,6 +11,7 @@ import java.util.Objects;
 
 public class Order {
     private final int orderId;
+
     private final OrderCustomer orderCustomer;
     private final OrderRestaurant orderRestaurant;
     private final List<OrderItem> orderItems;
@@ -65,6 +66,9 @@ public class Order {
         }
 
         return total;
+    }
+    public int getOrderId(){
+        return orderId;
     }
     private void transitionTo(OrderStatus nextStatus) {
 

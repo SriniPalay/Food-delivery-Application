@@ -2,6 +2,9 @@ package org.swiggy.models;
 
 import org.swiggy.enums.FoodCategory;
 import org.swiggy.enums.FoodType;
+import org.swiggy.repositories.InMemoryOrderRepository;
+import org.swiggy.repositories.OrderRepository;
+import org.swiggy.services.CheckoutService;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -382,22 +385,45 @@ public class Main {
                         biryaniOrderItem,
                         pizzaOrderItem
                 );
+        OrderRepository orderRepository =
+                new InMemoryOrderRepository();
+
+        CheckoutService checkoutService =
+                new CheckoutService(orderRepository);
 
         Order order =
-                new Order(
-                        1001,
-                        orderCustomer,
-                        orderRestaurant,
-                        orderItems,
-                        anotherAddress,
-                        orderDateTime
-                );
-        order.acceptByRestaurant();
-        order.startPreparing();
-        order.cancel();
+                checkoutService.checkout(customer);
+        System.out.println(order.getStatus());
+        System.out.println(order.getTotal());
+
+        System.out.println(
+                customer.getCart().isEmpty()
+        );
+
+//        Order order =
+//                new Order(
+//                        1001,
+//                        orderCustomer,
+//                        orderRestaurant,
+//                        orderItems,
+//                        anotherAddress,
+//                        orderDateTime
+//                );
+//        order.acceptByRestaurant();
+//        order.startPreparing();
+//        order.cancel();
 
 
         System.out.println("Initial status: " + order.getStatus());
+        System.out.println("Order total: " + order.getTotal());
+        System.out.println("Cart empty: " + customer.getCart().isEmpty());
+
+        Order savedOrder =
+                orderRepository.findById(order.getOrderId());
+
+        System.out.println(
+                "Retrieved order: " + savedOrder.getOrderId()
+        );
 //
 //
 //        order.acceptByRestaurant();
