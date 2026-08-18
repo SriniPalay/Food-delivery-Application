@@ -2,6 +2,8 @@ package org.swiggy.models;
 
 import org.swiggy.enums.FoodCategory;
 import org.swiggy.enums.FoodType;
+import org.swiggy.repositories.InMemoryOrderRepository;
+import org.swiggy.repositories.OrderRepository;
 import org.swiggy.services.CheckoutService;
 
 import java.math.BigDecimal;
@@ -383,9 +385,11 @@ public class Main {
                         biryaniOrderItem,
                         pizzaOrderItem
                 );
+        OrderRepository orderRepository =
+                new InMemoryOrderRepository();
 
         CheckoutService checkoutService =
-                new CheckoutService();
+                new CheckoutService(orderRepository);
 
         Order order =
                 checkoutService.checkout(customer);
@@ -411,6 +415,15 @@ public class Main {
 
 
         System.out.println("Initial status: " + order.getStatus());
+        System.out.println("Order total: " + order.getTotal());
+        System.out.println("Cart empty: " + customer.getCart().isEmpty());
+
+        Order savedOrder =
+                orderRepository.findById(order.getOrderId());
+
+        System.out.println(
+                "Retrieved order: " + savedOrder.getOrderId()
+        );
 //
 //
 //        order.acceptByRestaurant();

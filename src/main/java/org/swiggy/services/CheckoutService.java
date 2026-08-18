@@ -1,6 +1,7 @@
 package org.swiggy.services;
 
 import org.swiggy.models.*;
+import org.swiggy.repositories.OrderRepository;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -9,7 +10,11 @@ import java.util.Objects;
 
 public class CheckoutService {
     private static int nextOrderId=1;
+    private final OrderRepository orderRepository;
 
+    public CheckoutService(OrderRepository orderRepository) {
+        this.orderRepository = orderRepository;
+    }
 
     private int generateOrderId() {
         return nextOrderId++;
@@ -75,7 +80,7 @@ public class CheckoutService {
                         deliveryAddress,
                         LocalDateTime.now()
                 );
-
+        orderRepository.save(order);
         // 9. Clear cart ONLY after successful Order creation
         cart.clearCart();
 

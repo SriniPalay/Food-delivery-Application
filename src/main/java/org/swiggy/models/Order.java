@@ -67,6 +67,9 @@ public class Order {
 
         return total;
     }
+    public int getOrderId(){
+        return orderId;
+    }
     private void transitionTo(OrderStatus nextStatus) {
 
         if (!status.canTransitionTo(nextStatus)) {
