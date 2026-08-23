@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import org.springframework.stereotype.Service;
+
+@Service
 public class CheckoutService {
     private static int nextOrderId=1;
     private final OrderRepository orderRepository;
