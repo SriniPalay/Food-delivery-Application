@@ -8,6 +8,7 @@ import java.util.Map;
 import org.springframework.stereotype.Repository;
 
 @Repository
+
 public class InMemoryOrderRepository
         implements OrderRepository {
 
