@@ -1,5 +1,6 @@
 package org.swiggy.services;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.swiggy.models.*;
 import org.swiggy.repositories.OrderRepository;
 
@@ -15,7 +16,7 @@ public class CheckoutService {
     private static int nextOrderId=1;
     private final OrderRepository orderRepository;
 
-    public CheckoutService(OrderRepository orderRepository) {
+    public CheckoutService(@Qualifier("inMemoryOrderRepository") OrderRepository orderRepository) {
         this.orderRepository = orderRepository;
     }
 
@@ -91,4 +92,5 @@ public class CheckoutService {
         return order;
 
     }
+
 }
